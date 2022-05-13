@@ -4,7 +4,7 @@ const GameManager = (
         let _isOver = false;
         let _lastPausedState = true;
 
-        let _points = 900;
+        let _points = 0;
 
         return {
             Pause: (paused) => { 
