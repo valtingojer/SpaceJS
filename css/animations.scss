@@ -1,0 +1,57 @@
+//animate from top to bottom
+@-webkit-keyframes from-top-to-bottom {
+    0% {
+        -webkit-transform: translateY(-10vh);
+        transform: translateY(-10vh);
+        -moz-transform: translateY(-10vh);
+        -ms-transform: translateY(-10vh);
+        -o-transform: translateY(-10vh);
+    }
+    100% {
+        -webkit-transform: translateY(500vh);
+        transform: translateY(500vh);
+        -moz-transform: translateY(500vh);
+        -ms-transform: translateY(500vh);
+        -o-transform: translateY(500vh);
+    }
+}
+
+//animate rotation from -35deg to 35deg
+@-webkit-keyframes rotation {
+    0% {
+        -webkit-transform: rotate(-35deg);
+        transform: rotate(-35deg);
+        -moz-transform: rotate(-35deg);
+        -ms-transform: rotate(-35deg);
+        -o-transform: rotate(-35deg);
+    }
+    40% {
+        -webkit-transform: rotate(35deg);
+        transform: rotate(35deg);
+        -moz-transform: rotate(35deg);
+        -ms-transform: rotate(35deg);
+        -o-transform: rotate(35deg);
+    }
+    80% {
+        -webkit-transform: rotate(-35deg);
+        transform: rotate(-35deg);
+        -moz-transform: rotate(-35deg);
+        -ms-transform: rotate(-35deg);
+        -o-transform: rotate(-35deg);
+    }
+}
+
+
+
+//blink opacity
+@-webkit-keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

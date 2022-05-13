@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SpaceShooter</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/selector.js"></script>
+</head>
+<body>
+    <div id="game" class="fill-wh">
+        <!-- <div class="position-absolute" style="color: yellow; z-index: 9;">
+            x: <span class="x"></span><br/>
+            y: <span class="y"></span>
+        </div> -->
+        <div class="space-background position-absolute fill-wh"></div>
+        <div class="stars fill-vw position-absolute display-none">
+            <div class="star from-top-to-bottom"></div>
+        </div>
+        <div class="powerups position-absolute">
+            <!-- <div class="powerup blink"></div> -->
+        </div>
+        <div class="shoots-container position-absolute"></div>
+        <div class="spaceship-container position-absolute">
+            <div class="spaceship opacity-03-transition position-absolute">
+                <div class="spaceship-cannon power-1" style="margin-left: 42px; margin-top: 4px"></div>
+                <div class="spaceship-cannon power-2" style="margin-left: 20px; margin-top: 30px"></div>
+                <div class="spaceship-cannon power-2" style="margin-left: 60px; margin-top: 30px"></div>
+                <div class="spaceship-cannon power-3" style="margin-left: -6px; margin-top: 60px"></div>
+                <div class="spaceship-cannon power-3" style="margin-left: 86px; margin-top: 60px"></div>
+                <div class="spaceship-cannon power-4" style="margin-left: 30px; margin-top: 15px"></div>
+                <div class="spaceship-cannon power-4" style="margin-left: 54px; margin-top: 15px"></div>
+                <div class="spaceship-cannon power-5" style="margin-left: 6px; margin-top: 42px"></div>
+                <div class="spaceship-cannon power-5" style="margin-left: 74px; margin-top: 42px"></div>
+                <div class="spaceship-cannon power-6" style="margin-left: 0px; margin-top: 72px"></div>
+                <div class="spaceship-cannon power-6" style="margin-left: 80px; margin-top: 72px"></div>
+            </div>
+            <!-- <div class="bullet blink slower"></div> -->
+        </div>
+        <div class="hand-container position-absolute rotation">
+            <div class="hand position-relative"></div>
+        </div>
+        
+    </div>
+</body>
+
+<script src="./js/game.js"></script>
+
+</html>
+

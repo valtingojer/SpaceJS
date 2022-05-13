@@ -1,0 +1,83 @@
+html *{
+    pointer-events: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+}
+
+.fill-w{ width: 100% }
+.fill-h{ height: 100% }
+.fill-wh{ width: 100%; height: 100%; }
+.full-w{ width: 100vw; }
+.full-h{ height: 100vh; }
+.full-wh{ width: 100vw; height: 100vh; }
+
+.position-relative{ position: relative; }
+.position-absolute{ position: absolute; }
+
+.display-none{ display: none; }
+
+#game{}
+
+.space-background {
+    background-color: #150721;
+}
+
+.lean-right{
+    transform: rotate(4deg);
+    -webkit-transform: rotate(4deg);
+    -moz-transform: rotate(4deg);
+    -ms-transform: rotate(4deg);
+    -o-transform: rotate(4deg);
+    transition: 0.3s ease;
+    -webkit-transition: 0.3s ease;
+    -moz-transition: 0.3s ease;
+    -ms-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+}
+
+.lean-left{
+    transform: rotate(-4deg);
+    -webkit-transform: rotate(-4deg);
+    -moz-transform: rotate(-4deg);
+    -ms-transform: rotate(-4deg);
+    -o-transform: rotate(-4deg);
+    transition: 0.3s ease;
+    -webkit-transition: 0.3s ease;
+    -moz-transition: 0.3s ease;
+    -ms-transition: 0.3s ease;
+    -o-transition: 0.3s ease;
+}
+
+.opacity-00{ opacity: 0; }
+.opacity-01{ opacity: 0.1; }
+.opacity-02{ opacity: 0.2; }
+.opacity-03{ opacity: 0.3; }
+.opacity-04{ opacity: 0.4; }
+.opacity-05{ opacity: 0.5; }
+.opacity-06{ opacity: 0.6; }
+.opacity-07{ opacity: 0.7; }
+.opacity-08{ opacity: 0.8; }
+.opacity-09{ opacity: 0.9; }
+.opacity-10{ opacity: 1; }
+
+.opacity-00-transition{ opacity: 0;    transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; }
+.opacity-01-transition{ opacity: 0.1;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-02-transition{ opacity: 0.2;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-03-transition{ opacity: 0.3;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-04-transition{ opacity: 0.4;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-05-transition{ opacity: 0.5;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-06-transition{ opacity: 0.6;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-07-transition{ opacity: 0.7;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-08-transition{ opacity: 0.8;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-09-transition{ opacity: 0.9;  transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; } 
+.opacity-10-transition{ opacity: 1;    transition: 0.3s ease-in-out; -webkit-transition: 0.3s ease-in-out; -moz-transition: 0.3s ease-in-out; -ms-transition: 0.3s ease-in-out; -o-transition: 0.3s ease-in-out; }
