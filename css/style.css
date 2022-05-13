@@ -185,16 +185,9 @@
 
 .bullet {
   background-color: green;
-  background-repeat: no-repeat;
-  background-position: center center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  overfolow: hidden;
   position: absolute; }
   .bullet::after {
     content: '';
@@ -212,14 +205,16 @@
     -webkit-animation: blink 0.2s infinite;
     animation: blink 0.2s infinite; }
 
+.bullet-boss {
+  background-color: yellowgreen;
+  border: 1px solid red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute; }
+
 .laser {
   background-color: yellow;
-  background-repeat: no-repeat;
-  background-position: center center;
-  -webkit-background-size: contain;
-  -moz-background-size: contain;
-  -o-background-size: contain;
-  background-size: contain;
   width: 8px;
   height: 50px;
   position: absolute;
@@ -272,8 +267,7 @@
   width: 10px;
   height: 10px;
   position: absolute;
-  opacity: 0.3;
-  background-color: #f00;
+  opacity: 1;
   border-radius: 50%; }
 
 .life-bar {

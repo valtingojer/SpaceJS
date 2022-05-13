@@ -4,7 +4,7 @@ const GameManager = (
         let _isOver = false;
         let _lastPausedState = true;
 
-        let _points = 0;
+        let _points = 900;
 
         return {
             Pause: (paused) => { 
@@ -536,15 +536,17 @@ const EnemyManager = (()=>{
 })();
 
 const BossManager = (()=>{
-    let _boss = document.createElement("div");
-    _boss.classList.add("boss");
-
     let _displacement = 0;
+    let _shootDelay = 1000;
+
+    let _bullet = document.createElement("div");
+    _bullet.classList.add("bullet-boss");
 
     return {
         GetBoss: ()=> _(".boss"),
         CreateBoss: ()=>{
-            let boss = _boss.cloneNode(true);
+            let boss = _(".boss");
+            boss.classList.remove("display-none");
 
             let x = ((((window.innerWidth / 2) - 150) / window.innerWidth) * 100).toFixed(2) + "vw";
             let y = -200 + "px";
@@ -564,6 +566,8 @@ const BossManager = (()=>{
             };
 
             _afterUpdate(move);
+
+            setInterval(BossManager.Shoot(), _shootDelay);
         },
         BossPosition: (boss)=>{
             if(h.isNullOrUndefined(boss)) return;
@@ -591,6 +595,60 @@ const BossManager = (()=>{
             };
 
             return bounds;
+        },
+        Shoot: () => {
+            if(GameManager.IsPaused()) return;
+            let speed = 20;
+
+            let cannons = _(".boss .spaceship-cannon");
+
+            for(let i = 0; i < cannons.length; i++){
+                setTimeout(()=>{
+                    let cannon = cannons[i];
+                    let shoot = _bullet.cloneNode(true);
+                    shoot.style.left = 0;
+                    shoot.style.top = 0;
+
+                    cannon.appendChild(shoot);
+
+                    let move = ()=>{
+                        if(GameManager.IsPaused()) return;
+                        if(GameManager.IsOffScreen(shoot, 100)){
+                            shoot.remove();
+                            _afterUpdateClear(move);
+                        }
+                        GameManager.MoveToBottom(shoot, 2);
+
+                        let myPosition = BossManager.BulletPosition(shoot);
+                        let playerPosition = PlayerManager.ShipPosition();
+
+                        EventManager.OnCollisionEnter([myPosition], [playerPosition], [shoot], [PlayerManager.GetShip()], move, (data)=>{
+                            data.reference1.remove();
+                            PlayerManager.TakeDamage();
+                            _afterUpdateClear(data.trackerFunction);
+                        });
+                    };
+        
+                    _afterUpdate(move);
+
+
+
+                }, i * 300);
+            }
+
+
+            
+        },
+        BulletPosition: (bullet) => {
+            let left = parseInt(bullet.parentNode.style.marginLeft) + (parseInt(bullet.parentElement.parentElement.style.left) * window.innerWidth / 100); 
+            let top = parseInt(bullet.style.top) + parseInt(bullet.parentNode.style.marginTop) + parseInt(bullet.parentElement.parentElement.style.top);
+            let position = {
+                left: left,
+                right: left + bullet.offsetWidth,
+                top: top,
+                bottom: top + bullet.offsetHeight,
+            };
+            return position;
         },
         TakeDamage: ()=>{
             let boss = _(".boss");
