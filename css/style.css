@@ -321,10 +321,10 @@
   .game-over .content {
     text-align: center;
     color: white;
-    font-size: 1.5em; }
+    font-size: 2em; }
     .game-over .content a {
       color: white;
-      font-size: 1.5em;
+      font-size: 2em;
       text-decoration: none;
       pointer-events: all;
       -webkit-touch-callout: all;
@@ -336,6 +336,16 @@
       .game-over .content a:hover {
         text-decoration: underline; }
 
+@media screen and (max-width: 726px) {
+  .game-over .content {
+    font-size: 1.5em; }
+    .game-over .content a {
+      font-size: 1.5em; } }
+@media screen and (max-width: 500px) {
+  .game-over .content {
+    font-size: 1em; }
+    .game-over .content a {
+      font-size: 1em; } }
 html * {
   pointer-events: none;
   -webkit-touch-callout: none;
