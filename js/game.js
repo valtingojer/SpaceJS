@@ -101,7 +101,7 @@ const GameManager = (
                 EventManager.OnPointsChange();
             },
             GameOver: () => {
-                //alert("Game Over!");
+                _(".game-over").classList.remove("display-none");
                 _isOver = true;
             },
         };
@@ -558,7 +558,7 @@ const BossManager = (()=>{
                 if(GameManager.IsPaused()) return;
 
                 GameManager.MoveToBottom(boss, 0.5);
-                if(parseInt(boss.style.top) >= 300){
+                if(parseInt(boss.style.top) >= 150){
                     GameManager.GameOver();
                 }
             };

@@ -222,3 +222,45 @@
     background-color: yellow;
   }
 
+.game-over{
+  width: 50vw;
+  height: 50vh;
+  background-color: rgba(130, 20, 60, 0.8);
+  position: absolute;
+  margin: auto;
+  z-index: 99;
+  border-radius: 25%;
+  -webkit-border-radius: 25%;
+  -moz-border-radius: 25%;
+  -ms-border-radius: 25%;
+  -o-border-radius: 25%;
+
+  margin: 25%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  .content{
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
+    a{
+      color: white;
+      font-size: 1.5em;
+      text-decoration: none;
+
+      pointer-events: all;
+    -webkit-touch-callout: all;
+    -webkit-user-select: all;
+    -khtml-user-select: all;
+    -moz-user-select: all;
+    -ms-user-select: all;
+    user-select: all;
+
+      &:hover{
+        text-decoration: underline;
+      }
+
+    }
+  }
+}
