@@ -78,7 +78,7 @@
           obj = document.querySelectorAll(el);
           switch (obj.length) {
             case 0:
-              console.log('! _selector_Alert: ' + el + ' Not Found');
+              //console.log('! _selector_Alert: ' + el + ' Not Found');
               return false;
             case 1:
               return obj[0];
@@ -143,6 +143,7 @@
 
     let runAnimationUPdateSync = () => {
       __core.runUpdate();
+      //console.log(__core.getStackCount())
       window.requestAnimationFrame(runAnimationAfterUpdateSync);
     };
 

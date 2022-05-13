@@ -10,6 +10,8 @@ const GameManager = (
         let _isPaused = true;
         let _lastPausedState = true;
 
+        let _points = 0;
+
         return {
             Pause: (paused) => { 
                 _isPaused = paused; 
@@ -85,8 +87,14 @@ const GameManager = (
             },
 
 
-
-
+            GetPoints: () => _points,
+            AddPoints: (points) => {
+                _points += points;
+                EventManager.OnPointsChange();
+            },
+            GameOver: () => {
+                alert("Game Over!");
+            },
         };
     }
 )();
@@ -118,12 +126,19 @@ const LevelManager = (() => {
         EnableStars: ()=>{
             _stars.classList.remove("display-none");
         },
+        ChangePointsText: () => {
+            let points = GameManager.GetPoints();
+            _(".points").innerHTML = points;
+            //console.log(points)
+        }
+
     }
 })();
 
 const EventManager = (()=>{
     let _onPausedTrue = [];
     let _onPausedFalse = [];
+    let _onPointsChanged = [];
 
     return {
         RegisterOnPauseChange: (func, state) => {
@@ -138,14 +153,7 @@ const EventManager = (()=>{
             }
         },
 
-        OnCollisionEnter(element1Position, element2Position, callback){
-            if(h.isNullOrUndefined(element1Position)) return;
-            if(h.isNullOrUndefined(element2Position)) return;
-            if(h.isNullOrUndefined(callback)) return;
-            if(!h.isFunction(callback)) return;
-
-            // console.log(element1Position, element2Position);
-
+        SingleCollision: (element1Position, element2Position, reference1, reference2) => {
             let isLeftBetweenBorders = element1Position.left > element2Position.left && element1Position.left < element2Position.right;
             let isRightBetweenBorders = element1Position.right > element2Position.left && element1Position.right < element2Position.right;
             let isTopBetweenBorders = element1Position.top > element2Position.top && element1Position.top < element2Position.bottom;
@@ -154,11 +162,53 @@ const EventManager = (()=>{
             let isHorizontal = isLeftBetweenBorders || isRightBetweenBorders;
             let isVertical = isTopBetweenBorders || isBottomBetweenBorders;
 
-            // console.log(isHorizontal, isVertical);
-
             if(isHorizontal && isVertical) {
-                callback();
+                return [
+                    element1Position,
+                    element2Position,
+                    reference1,
+                    reference2
+                ];
+            }else{
+                return false;
             }
+        },
+
+        OnCollisionEnter(element1Positions, element2Positions, references1, references2, trackerFunction, callback){
+            if(h.isNullOrUndefined(element1Positions)) return;
+            if(h.isNullOrUndefined(element2Positions)) return;
+            if(h.isNullOrUndefined(callback)) return;
+            if(!h.isFunction(callback)) return;
+
+            for(let i = 0; i < element1Positions.length; i++) {
+                for(let j = 0; j < element2Positions.length; j++) {
+                    let element1Position = element1Positions[i];
+                    let element2Position = element2Positions[j];
+
+                    let reference1 = references1[i];
+                    let reference2 = references2[j];
+
+                    let collided = EventManager.SingleCollision(element1Position, element2Position, reference1, reference2);
+
+                    if(collided) {
+                        return callback({
+                            reference1: reference1,
+                            reference2: reference2,
+                            trackerFunction: trackerFunction,
+                        });
+                        
+                    }
+                }
+            }
+        },
+
+        
+
+        RegisterOnPointsChange: (func) => {
+            _onPointsChanged.push(func);
+        },
+        OnPointsChange: () => {
+            _onPointsChanged.forEach(func => func());
         }
     }
 })();
@@ -170,9 +220,10 @@ const PlayerManager = (()=>{
     let _prevPosition = 0;
     let _power = 1;
     let _lastShoot = 0;
-    let _shootDelay = 1000;
+    let _shootDelay = 1200;
     let _shootContainer = _(".shoots-container");
     let _displacement = -45
+    let _life = 10;
 
     let _bullet = document.createElement("div");
     _bullet.classList.add("bullet");
@@ -198,6 +249,13 @@ const PlayerManager = (()=>{
     // _("body").appendChild(_debug.bottom);
 
     return {
+        GetShip: () => _spaceship,
+        GetShipSprite: () => _spaceshipSprite,
+        GetLife: () => _life,
+        // SetLife: (life) => {
+        //     _life = life;
+        // },
+        GetPower: () => _power,
         EnableDisableSpaceship: ()=>{
             EventManager.RegisterOnPauseChange(()=>{
                 _spaceshipSprite.classList.add("opacity-03-transition");
@@ -257,8 +315,25 @@ const PlayerManager = (()=>{
                     shoot.remove();
                     _afterUpdateClear(move);
                 }
+
+                let myPosition = PlayerManager.BulletPosition(shoot);
+                let enemies = _(".enemy");
+
+                // if(typeof enemies.length != "number") return;
+                // if (enemies.length < 1) return;
+
+                let enemiesPositions = EnemyManager.EnemiesPosition(enemies);
+
+                EventManager.OnCollisionEnter([myPosition], enemiesPositions, [shoot], enemies, move, (data)=>{
+                    data.reference1.remove();
+                    data.reference2.remove();
+                    _afterUpdateClear(data.trackerFunction);
+                    GameManager.AddPoints(100);
+                });
+
+
             };
-            
+
             _afterUpdate(move);
         },
         ShootFromCannon: (cannonElements, shootType) => {
@@ -299,6 +374,26 @@ const PlayerManager = (()=>{
         PowerUp: () => {
             _power++;
         },
+        TakeDamage: () => {
+            if(_life <= 0) return;
+
+            let lifeBar = _(`.life-bar.amount-${_life}`);
+            lifeBar.classList.add("damage");
+
+            _life--;
+            if(_life <= 0){
+                GameManager.GameOver();
+            }
+        },
+        BulletPosition: (bullet) => {
+            let position = {
+                left: parseInt(bullet.style.left),
+                right: parseInt(bullet.style.left) + parseInt(bullet.style.width),
+                top: parseInt(bullet.style.top),
+                bottom: parseInt(bullet.style.top) + parseInt(bullet.style.height)
+            };
+            return position;
+        },
         ShipPosition: () => {
             let left = parseInt(_spaceship.style.left);
             let top = parseInt(_spaceship.offsetTop);
@@ -335,7 +430,129 @@ const PlayerManager = (()=>{
     }
 })();
 
-const EnemyManager = (()=>{})();
+const EnemyManager = (()=>{
+    let _enemies = _(".enemies");
+    let _enemy = document.createElement("div");
+    _enemy.classList.add("enemy");
+
+    let _enemyInterval = 2000;
+
+    let _displacement = 0;
+
+    return {
+        CreateEnemy: ()=>{
+            let enemy = _enemy.cloneNode(true);
+
+            let randomW = h.randomInt(10, 90);
+
+            enemy.style.left = randomW + "vw";
+            enemy.style.top = 0;
+
+            _enemies.appendChild(enemy);
+
+            // let _debug = {
+            //     left: document.createElement("div"),
+            //     right: document.createElement("div"),
+            //     top: document.createElement("div"),
+            //     bottom: document.createElement("div")
+            // }
+        
+            // _debug.left.classList.add("debug");
+            // _debug.right.classList.add("debug");
+            // _debug.top.classList.add("debug");
+            // _debug.bottom.classList.add("debug");
+        
+            // _("body").appendChild(_debug.left);
+            // _("body").appendChild(_debug.right);
+            // _("body").appendChild(_debug.top);
+            // _("body").appendChild(_debug.bottom);
+
+            let move = ()=>{
+                GameManager.MoveToBottom(enemy, 1);
+                if(GameManager.IsOffScreen(enemy, 100)){
+                    enemy.remove();
+                    _afterUpdateClear(move);
+                }
+                let myPosition = EnemyManager.EnemyPosition(enemy);
+
+                // _debug.left.style.left = myPosition.left + "px";
+                // _debug.left.style.top = myPosition.top + "px";
+                // _debug.right.style.left = myPosition.right + "px";
+                // _debug.right.style.top = myPosition.top + "px";
+                // _debug.top.style.top = myPosition.bottom + "px";
+                // _debug.top.style.left = myPosition.left + "px";
+                // _debug.bottom.style.top = myPosition.bottom + "px";
+                // _debug.bottom.style.left = myPosition.right + "px";
+
+                
+                let playerPosition = PlayerManager.ShipPosition();
+                EventManager.OnCollisionEnter([myPosition], [playerPosition], [enemy], [PlayerManager.GetShip()], move, (data)=>{  
+                    PlayerManager.TakeDamage();
+                    GameManager.AddPoints(100);
+                    data.reference1.remove();
+                    _afterUpdateClear(data.trackerFunction);
+                });
+            };
+
+            _afterUpdate(move);
+            
+        },
+        EnemySpawner: () => {
+            setInterval(()=>{
+                if(GameManager.IsPaused()) return;
+                if(GameManager.GetPoints() >= 1000) return;
+                EnemyManager.CreateEnemy();
+            }, _enemyInterval);
+        },
+        EnemiesPosition: (enemies) => {
+            let positions = [];
+            for(let i = 0; i < enemies.length; i++){
+                let enemy = enemies[i];
+                let position = EnemyManager.EnemyPosition(enemy);
+                positions.push(position);
+            }
+            return positions;
+        },
+        EnemyPosition: (enemy)=>{
+            let left = parseInt(enemy.style.left);
+            let top = parseInt(enemy.style.top);
+            let right = parseInt(left);
+            let bottom = parseInt(top) + parseInt(enemy.clientHeight);
+
+            left = isNaN(left) ? 0 : left;
+            top = isNaN(top) ? 0 : top;
+            right = isNaN(right) ? 0 : right;
+            bottom = isNaN(bottom) ? 0 : bottom;
+
+            
+            right = window.innerWidth * right / 100;
+            right += parseInt(enemy.clientWidth)
+            left = window.innerWidth * left / 100;
+
+            let bounds = {
+                left: left + _displacement,
+                top: top + _displacement,
+                right: right + _displacement,
+                bottom: bottom + _displacement,
+            };
+
+            return bounds;
+        },
+        ClearEnemies: () => {
+            let points = GameManager.GetPoints();
+
+            if(points >= 1000){    
+                let enemies = document.getElementsByClassName("enemies");
+                console.log(enemies.length);
+                for(let i = 0; i < enemies.length; i++){
+                    enemies[i].remove();
+                }
+                _afterUpdateClear(EnemyManager.ClearEnemies);
+            }
+        },
+
+    }
+})();
 
 const BossManager = (()=>{})();
 
@@ -355,7 +572,7 @@ const CollectableManager = (()=>{
             let randomW = h.randomInt(10, 90);
 
             powerUp.style.left = randomW + "vw";
-            powerUp.style.top = 0 + "vh";
+            powerUp.style.top = 0;
             _powerUps.appendChild(powerUp);
 
 
@@ -396,10 +613,10 @@ const CollectableManager = (()=>{
 
                 
                 let playerPosition = PlayerManager.ShipPosition();
-                EventManager.OnCollisionEnter(myPosition, playerPosition, ()=>{  
+                EventManager.OnCollisionEnter([myPosition], [playerPosition], [powerUp], [PlayerManager.GetShip()], move, (data)=>{  
                     PlayerManager.PowerUp();
-                    powerUp.remove();
-                    _afterUpdateClear(move);
+                    data.reference1.remove();
+                    _afterUpdateClear(data.trackerFunction);
                 });
             };
 
@@ -408,6 +625,8 @@ const CollectableManager = (()=>{
         PowerUpSpawner: () => {
             setInterval(()=>{
                 if(GameManager.IsPaused()) return;
+                if(GameManager.GetPoints() >= 1000) return;
+                if(PlayerManager.GetPower() >= 5) return;
                 CollectableManager.CreatePowerUp();
             }, _powerUpInterval);
         },
@@ -444,6 +663,8 @@ const StartGame = () => {
     GameManager.EnableDisableHand();
     PlayerManager.EnableDisableSpaceship();
     CollectableManager.PowerUpSpawner();
+    EnemyManager.EnemySpawner();
+    EventManager.RegisterOnPointsChange(LevelManager.ChangePointsText);
 }
 
 
@@ -460,4 +681,6 @@ _update(()=>{
     PlayerManager.MovePlayer();
     PlayerManager.ShootFromCannons();
     PlayerManager.ShipPosition();
+    
 })
+_afterUpdate(EnemyManager.ClearEnemies);
