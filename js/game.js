@@ -8,6 +8,7 @@
 const GameManager = (
     () => {
         let _isPaused = true;
+        let _isOver = false;
         let _lastPausedState = true;
 
         let _points = 0;
@@ -18,16 +19,30 @@ const GameManager = (
                 if(_isPaused != _lastPausedState) EventManager.OnPauseChange();
                 _lastPausedState = _isPaused;
             },
-            IsPaused: () => _isPaused,
+
+            IsPaused: () => {
+                if(_isOver) return true;
+                return _isPaused;
+            },
+
+            IsOver: () =>  _isOver,
             
             EnableDisableHand: () => {
-                EventManager.RegisterOnPauseChange(()=>{
+                let enable = ()=>{
                     _(".hand").classList.remove("opacity-00-transition");
-                }, true);
+                };
+                EventManager.RegisterOnPauseChange(enable, true);
 
-                EventManager.RegisterOnPauseChange(()=>{
+                let disable = ()=>{
                     _(".hand").classList.add("opacity-00-transition");
-                }, false);
+                };
+                EventManager.RegisterOnPauseChange(disable, false);
+
+                _update(() => {
+                    if(GameManager.IsOver()){
+                        _(".hand").classList.add("display-none");
+                    }
+                });
             },
             
             ScreenLimits: () => {
@@ -93,7 +108,8 @@ const GameManager = (
                 EventManager.OnPointsChange();
             },
             GameOver: () => {
-                alert("Game Over!");
+                //alert("Game Over!");
+                _isOver = true;
             },
         };
     }
@@ -580,9 +596,11 @@ const BossManager = (()=>{
             boss.style.left = x;
             boss.style.top = y;
 
-            _("body").appendChild(boss);
+            _("#game").appendChild(boss);
 
             let move = ()=>{
+                if(GameManager.IsPaused()) return;
+
                 GameManager.MoveToBottom(boss, 0.5);
                 if(parseInt(boss.style.top) >= 300){
                     GameManager.GameOver();
