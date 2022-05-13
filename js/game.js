@@ -331,7 +331,15 @@ const PlayerManager = (()=>{
                     GameManager.AddPoints(100);
                 });
 
-
+                let boss = BossManager.GetBoss();
+                if(boss){
+                    EventManager.OnCollisionEnter([myPosition], [BossManager.BossPosition(boss)], [shoot], [boss], move, (data)=>{
+                        data.reference1.remove();
+                        BossManager.TakeDamage();
+                        _afterUpdateClear(data.trackerFunction);
+                        GameManager.AddPoints(100);
+                    });
+                }
             };
 
             _afterUpdate(move);
@@ -548,13 +556,81 @@ const EnemyManager = (()=>{
                     enemies[i].remove();
                 }
                 _afterUpdateClear(EnemyManager.ClearEnemies);
+                BossManager.CreateBoss();
             }
         },
 
     }
 })();
 
-const BossManager = (()=>{})();
+const BossManager = (()=>{
+    let _boss = document.createElement("div");
+    _boss.classList.add("boss");
+
+    let _displacement = 0;
+
+    return {
+        GetBoss: ()=> _(".boss"),
+        CreateBoss: ()=>{
+            let boss = _boss.cloneNode(true);
+
+            let x = ((((window.innerWidth / 2) - 150) / window.innerWidth) * 100).toFixed(2) + "vw";
+            let y = -200 + "px";
+
+            boss.style.left = x;
+            boss.style.top = y;
+
+            _("body").appendChild(boss);
+
+            let move = ()=>{
+                GameManager.MoveToBottom(boss, 0.5);
+                if(parseInt(boss.style.top) >= 300){
+                    GameManager.GameOver();
+                }
+            };
+
+            _afterUpdate(move);
+        },
+        BossPosition: (boss)=>{
+            if(h.isNullOrUndefined(boss)) return;
+            if(h.isNullOrUndefined(boss.style)) return;
+
+            let left = parseInt(boss.style.left);
+            let top = parseInt(boss.style.top);
+            let right = parseInt(left);
+            let bottom = parseInt(top) + parseInt(boss.clientHeight);
+
+            left = isNaN(left) ? 0 : left;
+            top = isNaN(top) ? 0 : top;
+            right = isNaN(right) ? 0 : right;
+            bottom = isNaN(bottom) ? 0 : bottom;
+
+            right = window.innerWidth * right / 100;
+            right += parseInt(boss.clientWidth)
+            left = window.innerWidth * left / 100;
+
+            let bounds = {
+                left: left + _displacement,
+                top: top + _displacement,
+                right: right + _displacement,
+                bottom: bottom + _displacement,
+            };
+
+            return bounds;
+        },
+        TakeDamage: ()=>{
+            let boss = _(".boss");
+            boss.classList.add("blink");
+            boss.classList.add("faster");
+
+            setTimeout(()=>{
+                boss.classList.remove("blink");
+                boss.classList.remove("faster");
+            }, 1000);
+
+        },
+    }
+})();
 
 const CollectableManager = (()=>{
     let _powerUps = _(".powerups");
