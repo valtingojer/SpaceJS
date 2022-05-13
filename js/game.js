@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 const GameManager = (
     () => {
         let _isPaused = true;
@@ -247,30 +240,10 @@ const PlayerManager = (()=>{
     let _laser = document.createElement("div");
     _laser.classList.add("laser");
 
-    // _debug = {
-    //     left: document.createElement("div"),
-    //     right: document.createElement("div"),
-    //     top: document.createElement("div"),
-    //     bottom: document.createElement("div")
-    // }
-
-    // _debug.left.classList.add("debug");
-    // _debug.right.classList.add("debug");
-    // _debug.top.classList.add("debug");
-    // _debug.bottom.classList.add("debug");
-
-    // _("body").appendChild(_debug.left);
-    // _("body").appendChild(_debug.right);
-    // _("body").appendChild(_debug.top);
-    // _("body").appendChild(_debug.bottom);
-
     return {
         GetShip: () => _spaceship,
         GetShipSprite: () => _spaceshipSprite,
         GetLife: () => _life,
-        // SetLife: (life) => {
-        //     _life = life;
-        // },
         GetPower: () => _power,
         EnableDisableSpaceship: ()=>{
             EventManager.RegisterOnPauseChange(()=>{
@@ -335,9 +308,6 @@ const PlayerManager = (()=>{
                 let myPosition = PlayerManager.BulletPosition(shoot);
                 let enemies = _(".enemy");
 
-                // if(typeof enemies.length != "number") return;
-                // if (enemies.length < 1) return;
-
                 let enemiesPositions = EnemyManager.EnemiesPosition(enemies);
 
                 EventManager.OnCollisionEnter([myPosition], enemiesPositions, [shoot], enemies, move, (data)=>{
@@ -384,8 +354,6 @@ const PlayerManager = (()=>{
                 _(".spaceship-cannon.power-2"),
                 _(".spaceship-cannon.power-3"),
                 _(".spaceship-cannon.power-4"),
-                // _(".spaceship-cannon.power-5"),
-                // _(".spaceship-cannon.power-6")
             ];
             
             for(let i = 0; i < cannons.length; i++){
@@ -435,18 +403,6 @@ const PlayerManager = (()=>{
                 right: right + _displacement,
                 bottom: bottom + _displacement,
             };
-
-            // _debug.left.style.left = bounds.left + "px";
-            // _debug.left.style.top = bounds.top + "px";
-
-            // _debug.right.style.left = bounds.right + "px";
-            // _debug.right.style.top = bounds.top + "px";
-
-            // _debug.top.style.top = bounds.bottom + "px";
-            // _debug.top.style.left = bounds.left + "px";
-
-            // _debug.bottom.style.top = bounds.bottom + "px";
-            // _debug.bottom.style.left = bounds.right + "px";
 
             return bounds;
         }
@@ -669,25 +625,6 @@ const CollectableManager = (()=>{
             powerUp.style.top = 0;
             _powerUps.appendChild(powerUp);
 
-
-            // let _debug = {
-            //     left: document.createElement("div"),
-            //     right: document.createElement("div"),
-            //     top: document.createElement("div"),
-            //     bottom: document.createElement("div")
-            // }
-        
-            // _debug.left.classList.add("debug");
-            // _debug.right.classList.add("debug");
-            // _debug.top.classList.add("debug");
-            // _debug.bottom.classList.add("debug");
-        
-            // _("body").appendChild(_debug.left);
-            // _("body").appendChild(_debug.right);
-            // _("body").appendChild(_debug.top);
-            // _("body").appendChild(_debug.bottom);
-
-
             let move = ()=>{
                 GameManager.MoveToBottom(powerUp, 3);
                 if(GameManager.IsOffScreen(powerUp, 100)){
@@ -696,16 +633,6 @@ const CollectableManager = (()=>{
                 }
                 let myPosition = CollectableManager.PowerUpPosition(powerUp);
 
-                // _debug.left.style.left = myPosition.left + "px";
-                // _debug.left.style.top = myPosition.top + "px";
-                // _debug.right.style.left = myPosition.right + "px";
-                // _debug.right.style.top = myPosition.top + "px";
-                // _debug.top.style.top = myPosition.bottom + "px";
-                // _debug.top.style.left = myPosition.left + "px";
-                // _debug.bottom.style.top = myPosition.bottom + "px";
-                // _debug.bottom.style.left = myPosition.right + "px";
-
-                
                 let playerPosition = PlayerManager.ShipPosition();
                 EventManager.OnCollisionEnter([myPosition], [playerPosition], [powerUp], [PlayerManager.GetShip()], move, (data)=>{  
                     PlayerManager.PowerUp();
@@ -735,7 +662,6 @@ const CollectableManager = (()=>{
             right = isNaN(right) ? 0 : right;
             bottom = isNaN(bottom) ? 0 : bottom;
 
-            
             right = window.innerWidth * right / 100;
             right += parseInt(powerUpElement.clientWidth)
             left = window.innerWidth * left / 100;
