@@ -176,32 +176,26 @@ const PlayerManager = (()=>{
 
     let _bullet = document.createElement("div");
     _bullet.classList.add("bullet");
-    // _bullet.classList.add("blink");
-    // _bullet.classList.add("faster");
-    //<div class="bullet blink"></div>
 
     let _laser = document.createElement("div");
     _laser.classList.add("laser");
-    // _laser.classList.add("blink");
-    // _laser.classList.add("faster");
-    //<div class="laser blink"></div>
 
-    _debug = {
-        left: document.createElement("div"),
-        right: document.createElement("div"),
-        top: document.createElement("div"),
-        bottom: document.createElement("div")
-    }
+    // _debug = {
+    //     left: document.createElement("div"),
+    //     right: document.createElement("div"),
+    //     top: document.createElement("div"),
+    //     bottom: document.createElement("div")
+    // }
 
-    _debug.left.classList.add("debug");
-    _debug.right.classList.add("debug");
-    _debug.top.classList.add("debug");
-    _debug.bottom.classList.add("debug");
+    // _debug.left.classList.add("debug");
+    // _debug.right.classList.add("debug");
+    // _debug.top.classList.add("debug");
+    // _debug.bottom.classList.add("debug");
 
-    _("body").appendChild(_debug.left);
-    _("body").appendChild(_debug.right);
-    _("body").appendChild(_debug.top);
-    _("body").appendChild(_debug.bottom);
+    // _("body").appendChild(_debug.left);
+    // _("body").appendChild(_debug.right);
+    // _("body").appendChild(_debug.top);
+    // _("body").appendChild(_debug.bottom);
 
     return {
         EnableDisableSpaceship: ()=>{
@@ -257,14 +251,15 @@ const PlayerManager = (()=>{
             shoot.style.top = (parseInt(_spaceship.offsetTop)+parseInt(cannon.style.marginTop)+_displacement) + "px";
             _shootContainer.appendChild(shoot);
 
-            
-            
-            _update(()=>{
+            var move = ()=>{
                 GameManager.MoveToTop(shoot, speed);
                 if(GameManager.IsOffScreen(shoot, 100)){
                     shoot.remove();
+                    _afterUpdateClear(move);
                 }
-            });
+            };
+            
+            _afterUpdate(move);
         },
         ShootFromCannon: (cannonElements, shootType) => {
             if(GameManager.IsPaused()) return;
@@ -290,14 +285,14 @@ const PlayerManager = (()=>{
                 _(".spaceship-cannon.power-2"),
                 _(".spaceship-cannon.power-3"),
                 _(".spaceship-cannon.power-4"),
-                _(".spaceship-cannon.power-5"),
-                _(".spaceship-cannon.power-6")
+                // _(".spaceship-cannon.power-5"),
+                // _(".spaceship-cannon.power-6")
             ];
             
             for(let i = 0; i < cannons.length; i++){
                 if(_power <= i) break;
                 let cannon = cannons[i];
-                let shootType = i >= 3 ? "laser" : "bullet";
+                let shootType = i >= 2 ? "laser" : "bullet";
                 PlayerManager.ShootFromCannon(cannon, shootType);
             }
         },
@@ -322,17 +317,17 @@ const PlayerManager = (()=>{
                 bottom: bottom + _displacement,
             };
 
-            _debug.left.style.left = bounds.left + "px";
-            _debug.left.style.top = bounds.top + "px";
+            // _debug.left.style.left = bounds.left + "px";
+            // _debug.left.style.top = bounds.top + "px";
 
-            _debug.right.style.left = bounds.right + "px";
-            _debug.right.style.top = bounds.top + "px";
+            // _debug.right.style.left = bounds.right + "px";
+            // _debug.right.style.top = bounds.top + "px";
 
-            _debug.top.style.top = bounds.bottom + "px";
-            _debug.top.style.left = bounds.left + "px";
+            // _debug.top.style.top = bounds.bottom + "px";
+            // _debug.top.style.left = bounds.left + "px";
 
-            _debug.bottom.style.top = bounds.bottom + "px";
-            _debug.bottom.style.left = bounds.right + "px";
+            // _debug.bottom.style.top = bounds.bottom + "px";
+            // _debug.bottom.style.left = bounds.right + "px";
 
             return bounds;
         }
@@ -364,47 +359,51 @@ const CollectableManager = (()=>{
             _powerUps.appendChild(powerUp);
 
 
-            let _debug = {
-                left: document.createElement("div"),
-                right: document.createElement("div"),
-                top: document.createElement("div"),
-                bottom: document.createElement("div")
-            }
+            // let _debug = {
+            //     left: document.createElement("div"),
+            //     right: document.createElement("div"),
+            //     top: document.createElement("div"),
+            //     bottom: document.createElement("div")
+            // }
         
-            _debug.left.classList.add("debug");
-            _debug.right.classList.add("debug");
-            _debug.top.classList.add("debug");
-            _debug.bottom.classList.add("debug");
+            // _debug.left.classList.add("debug");
+            // _debug.right.classList.add("debug");
+            // _debug.top.classList.add("debug");
+            // _debug.bottom.classList.add("debug");
         
-            _("body").appendChild(_debug.left);
-            _("body").appendChild(_debug.right);
-            _("body").appendChild(_debug.top);
-            _("body").appendChild(_debug.bottom);
+            // _("body").appendChild(_debug.left);
+            // _("body").appendChild(_debug.right);
+            // _("body").appendChild(_debug.top);
+            // _("body").appendChild(_debug.bottom);
 
-            _update(()=>{
+
+            let move = ()=>{
                 GameManager.MoveToBottom(powerUp, 3);
                 if(GameManager.IsOffScreen(powerUp, 100)){
                     powerUp.remove();
+                    _afterUpdateClear(move);
                 }
                 let myPosition = CollectableManager.PowerUpPosition(powerUp);
 
-                _debug.left.style.left = myPosition.left + "px";
-                _debug.left.style.top = myPosition.top + "px";
-                _debug.right.style.left = myPosition.right + "px";
-                _debug.right.style.top = myPosition.top + "px";
-                _debug.top.style.top = myPosition.bottom + "px";
-                _debug.top.style.left = myPosition.left + "px";
-                _debug.bottom.style.top = myPosition.bottom + "px";
-                _debug.bottom.style.left = myPosition.right + "px";
+                // _debug.left.style.left = myPosition.left + "px";
+                // _debug.left.style.top = myPosition.top + "px";
+                // _debug.right.style.left = myPosition.right + "px";
+                // _debug.right.style.top = myPosition.top + "px";
+                // _debug.top.style.top = myPosition.bottom + "px";
+                // _debug.top.style.left = myPosition.left + "px";
+                // _debug.bottom.style.top = myPosition.bottom + "px";
+                // _debug.bottom.style.left = myPosition.right + "px";
 
                 
                 let playerPosition = PlayerManager.ShipPosition();
                 EventManager.OnCollisionEnter(myPosition, playerPosition, ()=>{  
                     PlayerManager.PowerUp();
-                    //console.log("colidindo")
                     powerUp.remove();
+                    _afterUpdateClear(move);
                 });
-            });
+            };
+
+            _afterUpdate(move);
         },
         PowerUpSpawner: () => {
             setInterval(()=>{
@@ -461,8 +460,4 @@ _update(()=>{
     PlayerManager.MovePlayer();
     PlayerManager.ShootFromCannons();
     PlayerManager.ShipPosition();
-    //change text of span
-    _(".x").innerText = window.pageX;
-    _(".y").innerText = window.pageY;
 })
-

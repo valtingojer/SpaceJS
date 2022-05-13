@@ -78,7 +78,7 @@
           obj = document.querySelectorAll(el);
           switch (obj.length) {
             case 0:
-              ////console.log('! _jaAlert: ' + el + ' Not Found');
+              console.log('! _selector_Alert: ' + el + ' Not Found');
               return false;
             case 1:
               return obj[0];
@@ -103,9 +103,31 @@
       }
     };
 
+    let clearUpdate = (func) => {
+      if (h.isNullEmptyOrUndefined(func) || !h.isFunction(func)) {
+        throw "Ready must have an function as parameter";
+      } else {
+        _update = _update.filter(f => f != func);
+      }
+    };
+
+    let clearAfterUpdate = (func) => {
+      if (h.isNullEmptyOrUndefined(func) || !h.isFunction(func)) {
+        throw "Ready must have an function as parameter";
+      } else {
+        let n1 = _afterUpdate.length
+        _afterUpdate = _afterUpdate.filter(f => f != func);
+        let n2 = _afterUpdate.length
+      }
+    };
+
     let run = (v) => {
       v.forEach(function(childFunc) {
-        return childFunc();
+        try {
+          return childFunc(); 
+        } catch (error) {
+          console.log(error);
+        }
       });
     };
 
@@ -128,11 +150,30 @@
       start: (func) => add(_start, func),
       update: (func) => add(_update, func),
       afterUpdate: (func) => add(_afterUpdate, func),
+
+      updateClear: (func) => clearUpdate(func),
+      afterUpdateClear: (func) => clearAfterUpdate(func),
+
       runStart: () => run(_start),
       runUpdate: () => run(_update),
       runAfterUpdate: () => run(_afterUpdate),
       runAnimationSync: () => window.requestAnimationFrame(runAnimationUPdateSync),
       runAnimationAsync: () => new Promise(resolve => window.requestAnimationFrame(runAnimationUPdateAsync)),
+
+      getStack: ()=>{
+        return {
+          start: _start,
+          update: _update,
+          afterUpdate: _afterUpdate
+        }
+      },
+      getStackCount: ()=>{
+        return {
+          start: _start.length,
+          update: _update.length,
+          afterUpdate: _afterUpdate.length
+        }
+      },
 
       trackMouse: () => {
         document.addEventListener('mousedown', function() { window["isMouseDown"] = true; });
@@ -191,6 +232,10 @@ const _ = function(el) {
 const _start = (f) => __core.start(f);
 const _update = (f) => __core.update(f);
 const _afterUpdate = (f) => __core.afterUpdate(f);
+
+
+const _updateClear = (f) => __core.updateClear(f);
+const _afterUpdateClear = (f) => __core.afterUpdateClear(f);
 
 document.addEventListener("DOMContentLoaded", function(event){
   __core.runStart();
